@@ -158,6 +158,13 @@ function showTooltip(data, rect) {
   // Create tooltip element
   tooltipElement = document.createElement('div');
   tooltipElement.className = 'llext-tooltip';
+
+  // Prepare part of speech with gender if available
+  let partOfSpeechText = data.partOfSpeech;
+  if (data.gender && data.partOfSpeech.toLowerCase().includes('noun')) {
+    partOfSpeechText += ` (${data.gender})`;
+  }
+
   tooltipElement.innerHTML = `
     <div class="llext-tooltip-header">
       <div class="llext-original-text">${data.originalText}</div>
@@ -168,7 +175,7 @@ function showTooltip(data, rect) {
     </div>
     <div class="llext-translation">${data.translation}</div>
     <div class="llext-context">
-      <div class="llext-part-speech">${data.partOfSpeech}</div>
+      <div class="llext-part-speech">${partOfSpeechText}</div>
       <div class="llext-example">${data.example}</div>
       ${data.model ? `<div class="llext-model">Using model: ${data.model}</div>` : ''}
     </div>
@@ -192,7 +199,7 @@ function showTooltip(data, rect) {
       pin: {
         text: data.originalText,
         translation: data.translation,
-        context: `${data.partOfSpeech} - ${data.example}`,
+        context: `${partOfSpeechText} - ${data.example}`,
         model: data.model
       }
     });

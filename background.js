@@ -202,12 +202,12 @@ function savePin(pin) {
 async function translateText(text, targetLanguage, apiKey, baseUrl, model) {
   try {
     debugLog('Using model for translation:', model);
-    
+
     // Create the proper URL for the chat completions endpoint
     const apiUrl = baseUrl.endsWith('/')
       ? `${baseUrl}chat/completions`
       : `${baseUrl}/chat/completions`;
-      
+
     debugLog('Making API request to:', apiUrl);
 
     const response = await fetch(apiUrl, {
@@ -223,7 +223,9 @@ async function translateText(text, targetLanguage, apiKey, baseUrl, model) {
             role: 'system',
             content: `You are a language translation assistant that translates text to ${targetLanguage}.
                      Provide the translation followed by part-of-speech information, and one example
-                     sentence showing usage. Format your response as JSON with "translation", "partOfSpeech",
+                     sentence showing usage. If the word is a noun and the target language has grammatical gender,
+                     include the gender information (masculine, feminine, neuter, etc.) in your response.
+                     Format your response as JSON with "translation", "partOfSpeech", "gender" (if applicable),
                      and "example" fields.`
           },
           {
@@ -260,6 +262,7 @@ async function translateText(text, targetLanguage, apiKey, baseUrl, model) {
       originalText: text,
       translation: result.translation,
       partOfSpeech: result.partOfSpeech,
+      gender: result.gender || null, // Include gender if available
       example: result.example,
       model: model  // Include the model used for this translation
     };
@@ -282,7 +285,7 @@ async function fetchAvailableModels(baseUrl, apiKey) {
     const modelsUrl = baseUrl.endsWith('/')
       ? `${baseUrl}models`
       : `${baseUrl}/models`;
-      
+
     debugLog('Making models request to:', modelsUrl);
 
     const response = await fetch(modelsUrl, {
