@@ -118,7 +118,7 @@ function handleTextSelection(event) {
         }
       );
     }
-  }, 1000); // 1 second debounce
+  }, 300); // Reduced from 1000ms to 300ms for faster response
 }
 
 // Show error in tooltip
