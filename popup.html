@@ -44,6 +44,19 @@
       </div>
 
       <div class="setting-item">
+        <label for="api-provider">API Provider:</label>
+        <select id="api-provider">
+          <option value="custom">Custom</option>
+          <option value="openai">OpenAI</option>
+          <option value="anthropic">Anthropic</option>
+          <option value="google">Google AI</option>
+          <option value="ollama">Ollama</option>
+          <option value="openrouter">OpenRouter</option>
+          <option value="localai">LocalAI</option>
+        </select>
+      </div>
+
+      <div class="setting-item" id="base-url-container">
         <label for="base-url">API Base URL:</label>
         <input type="text" id="base-url" placeholder="Enter the API base URL">
       </div>

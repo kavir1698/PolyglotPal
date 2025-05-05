@@ -4,12 +4,25 @@ document.addEventListener('DOMContentLoaded', function() {
   const statusText = document.getElementById('status-text');
   const targetLanguage = document.getElementById('target-language');
   const apiKey = document.getElementById('api-key');
+  const apiProvider = document.getElementById('api-provider');
   const baseUrl = document.getElementById('base-url');
+  const baseUrlContainer = document.getElementById('base-url-container');
   const modelSelection = document.getElementById('model-selection');
   const customModelContainer = document.getElementById('custom-model-container');
   const customModel = document.getElementById('custom-model');
   const saveButton = document.getElementById('save-settings');
   const pinnedTranslationContainer = document.getElementById('pinned-translations');
+
+  // API Provider base URLs
+  const providerBaseUrls = {
+    openai: 'https://api.openai.com/v1',
+    anthropic: 'https://api.anthropic.com/v1',
+    google: 'https://generativelanguage.googleapis.com/v1',
+    ollama: 'http://localhost:11434/api',
+    openrouter: 'https://openrouter.ai/api/v1',
+    localai: 'http://localhost:8080/v1',
+    custom: ''
+  };
 
   // Add a loading indicator for models
   let modelsLoading = false;
@@ -32,6 +45,20 @@ document.addEventListener('DOMContentLoaded', function() {
       targetLanguage.value = items.targetLanguage;
       apiKey.value = items.apiKey;
       baseUrl.value = items.baseUrl;
+
+      // Set the API provider dropdown based on the base URL
+      let providerFound = false;
+      for (const [provider, url] of Object.entries(providerBaseUrls)) {
+        if (url === items.baseUrl) {
+          apiProvider.value = provider;
+          providerFound = true;
+          break;
+        }
+      }
+
+      if (!providerFound) {
+        apiProvider.value = 'custom';
+      }
 
       // If we have both API key and base URL, try to fetch models
       if (items.apiKey && items.baseUrl) {
@@ -76,6 +103,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
   baseUrl.addEventListener('input', updateModelsDebounced);
   apiKey.addEventListener('input', updateModelsDebounced);
+
+  // API provider selection change
+  apiProvider.addEventListener('change', function() {
+    const selectedProvider = apiProvider.value;
+
+    if (selectedProvider === 'custom') {
+      // For custom provider, show empty URL field
+      baseUrl.value = '';
+      baseUrlContainer.style.display = 'block';
+    } else {
+      // For known providers, set the URL and show it as read-only
+      baseUrl.value = providerBaseUrls[selectedProvider];
+      baseUrlContainer.style.display = 'block';
+
+      // If API key is present, attempt to fetch models for the new provider
+      const currentApiKey = apiKey.value.trim();
+      if (currentApiKey) {
+        fetchModels(providerBaseUrls[selectedProvider], currentApiKey);
+      }
+    }
+  });
 
   // Model selection change
   modelSelection.addEventListener('change', function() {
