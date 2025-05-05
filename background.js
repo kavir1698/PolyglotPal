@@ -230,8 +230,7 @@ async function translateText(text, targetLanguage, apiKey, baseUrl, model) {
                      3. Gender information (if the word is a noun and the target language has grammatical gender)
                      4. One example sentence showing usage
                      5. Usage frequency (indicate if common/uncommon and formal/informal)
-                     6. Conjugation or declension tables (for verbs: provide basic tense variations; for nouns/adjectives: provide case variations)
-                     7. Common collocations (2-3 words or phrases frequently used with the translated term)
+                     6. Common collocations (2-3 words or phrases frequently used with the translated term)
 
                      Format your response as JSON with the following fields:
                      - "translation": the translated text
@@ -239,7 +238,6 @@ async function translateText(text, targetLanguage, apiKey, baseUrl, model) {
                      - "gender": grammatical gender if applicable
                      - "example": example sentence
                      - "usageFrequency": object with "frequency" (common/uncommon) and "register" (formal/informal)
-                     - "conjugationDeclension": object containing relevant variations based on part of speech
                      - "collocations": array of common word combinations with the translated term`
           },
           {
@@ -280,7 +278,6 @@ async function translateText(text, targetLanguage, apiKey, baseUrl, model) {
       example: result.example,
       model: model,  // Include the model used for this translation
       usageFrequency: result.usageFrequency || null, // Include usage frequency if available
-      conjugationDeclension: result.conjugationDeclension || null, // Include conjugation/declension if available
       collocations: result.collocations || [] // Include collocations if available
     };
   } catch (error) {
