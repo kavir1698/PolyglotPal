@@ -222,11 +222,25 @@ async function translateText(text, targetLanguage, apiKey, baseUrl, model) {
           {
             role: 'system',
             content: `You are a language translation assistant that translates text to ${targetLanguage}.
-                     Provide the translation followed by part-of-speech information, and one example
-                     sentence showing usage. If the word is a noun and the target language has grammatical gender,
-                     include the gender information (masculine, feminine, neuter, etc.) in your response.
-                     Format your response as JSON with "translation", "partOfSpeech", "gender" (if applicable),
-                     and "example" fields.`
+                     Provide the translation followed by detailed linguistic information to help language learners.
+
+                     Include the following in your response:
+                     1. Translation of the text
+                     2. Part-of-speech information
+                     3. Gender information (if the word is a noun and the target language has grammatical gender)
+                     4. One example sentence showing usage
+                     5. Usage frequency (indicate if common/uncommon and formal/informal)
+                     6. Conjugation or declension tables (for verbs: provide basic tense variations; for nouns/adjectives: provide case variations)
+                     7. Common collocations (2-3 words or phrases frequently used with the translated term)
+
+                     Format your response as JSON with the following fields:
+                     - "translation": the translated text
+                     - "partOfSpeech": part of speech
+                     - "gender": grammatical gender if applicable
+                     - "example": example sentence
+                     - "usageFrequency": object with "frequency" (common/uncommon) and "register" (formal/informal)
+                     - "conjugationDeclension": object containing relevant variations based on part of speech
+                     - "collocations": array of common word combinations with the translated term`
           },
           {
             role: 'user',
@@ -264,7 +278,10 @@ async function translateText(text, targetLanguage, apiKey, baseUrl, model) {
       partOfSpeech: result.partOfSpeech,
       gender: result.gender || null, // Include gender if available
       example: result.example,
-      model: model  // Include the model used for this translation
+      model: model,  // Include the model used for this translation
+      usageFrequency: result.usageFrequency || null, // Include usage frequency if available
+      conjugationDeclension: result.conjugationDeclension || null, // Include conjugation/declension if available
+      collocations: result.collocations || [] // Include collocations if available
     };
   } catch (error) {
     console.error('Translation error:', error);

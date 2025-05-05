@@ -93,3 +93,56 @@
   background-color: rgba(255, 255, 0, 0.2);
   border-bottom: 1px dashed #0078d7;
 }
+
+.llext-usage-frequency,
+.llext-collocations {
+  margin: 8px 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.llext-collocations {
+  color: #555;
+}
+
+.llext-conjugation-declension {
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+.llext-table {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 5px;
+}
+
+.llext-grammar-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.llext-grammar-table th {
+  background-color: #f5f5f5;
+  text-align: left;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.llext-grammar-table td {
+  padding: 4px 5px;
+  border-bottom: 1px solid #eee;
+}
+
+.llext-grammar-table tr:last-child td {
+  border-bottom: none;
+}
+
+.llext-model {
+  margin-top: 10px;
+  font-size: 11px;
+  color: #888;
+  text-align: right;
+  font-style: italic;
+}

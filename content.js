@@ -118,7 +118,7 @@ function handleTextSelection(event) {
         }
       );
     }
-  }, 300); // Reduced from 1000ms to 300ms for faster response
+  }, 900); // 1 second delay to allow user to finish selection
 }
 
 // Show error in tooltip
@@ -176,7 +176,27 @@ function showTooltip(data, rect) {
     <div class="llext-translation">${data.translation}</div>
     <div class="llext-context">
       <div class="llext-part-speech">${partOfSpeechText}</div>
+
+      ${data.usageFrequency ? `
+      <div class="llext-usage-frequency">
+        <strong>Usage:</strong> ${data.usageFrequency.frequency || 'N/A'}, ${data.usageFrequency.register || 'N/A'}
+      </div>` : ''}
+
       <div class="llext-example">${data.example}</div>
+
+      ${data.collocations && data.collocations.length > 0 ? `
+      <div class="llext-collocations">
+        <strong>Common collocations:</strong> ${data.collocations.join(', ')}
+      </div>` : ''}
+
+      ${data.conjugationDeclension ? `
+      <div class="llext-conjugation-declension">
+        <strong>Conjugation/Declension:</strong>
+        <div class="llext-table">
+          ${renderConjugationDeclensionTable(data.conjugationDeclension)}
+        </div>
+      </div>` : ''}
+
       ${data.model ? `<div class="llext-model">Using model: ${data.model}</div>` : ''}
     </div>
   `;
@@ -285,4 +305,31 @@ function removeHighlighting() {
     }
     parent.removeChild(highlight);
   });
+}
+
+// Render conjugation or declension table HTML
+function renderConjugationDeclensionTable(data) {
+  if (!data || typeof data !== 'object') {
+    return 'No data available';
+  }
+
+  let html = '<table class="llext-grammar-table">';
+
+  // Process the data object
+  for (const [category, values] of Object.entries(data)) {
+    if (typeof values === 'object') {
+      // Handle nested objects (e.g., tenses with multiple persons)
+      html += `<tr><th colspan="2">${category}</th></tr>`;
+
+      for (const [key, value] of Object.entries(values)) {
+        html += `<tr><td>${key}</td><td>${value}</td></tr>`;
+      }
+    } else {
+      // Handle simple key-value pairs
+      html += `<tr><td>${category}</td><td>${values}</td></tr>`;
+    }
+  }
+
+  html += '</table>';
+  return html;
 }
